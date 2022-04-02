@@ -16,7 +16,7 @@ app.use(morgan('combined'));  //Lo pongo aca pq va despues del filtro de quien p
 app.use(express.json());
 app.use(express.static(path.join(__dirname,'..','public')));
 
-app.use('planets', planetsRouter);
+app.use('/planets', planetsRouter);
 app.use('/launches', launchesRouter);
 // Si no pasa por ninguna de las rutas de arriba la mando al front que esta en index.html
 app.get('/*', (req, res) => {

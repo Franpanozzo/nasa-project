@@ -8,7 +8,7 @@ const launch = {
   mission: 'Kepler Exploration X',
   rocket: 'Explorer IS1',
   launchDate: new Date('December 27, 2030'),
-  destination: 'Kepler-442 b',
+  target: 'Kepler-442 b',
   customers: ['ZTM','NASA'],
   upcoming: true,
   sucess: true
@@ -17,13 +17,16 @@ const launch = {
 addNewLaunch(launch);
 launches.get(100) === launch;
 
+function existsLaunchWithId(launchId) {
+  return launches.has(launchId);
+}
+
 function getAllLaunches() {
   return Array.from(launches.values());
 }
 
 function addNewLaunch(launch) {
   latestFlightNumber++;
-  launch.launchDate = new Date(launch.launchDate);  // "Parseo" el string que me pasan del json a Date
   launches.set(latestFlightNumber, Object.assign(launch, { 
     flightNumber: latestFlightNumber,  // .assing() le METE las propiedad del obj. pasado como segundo param. al primero, y si las tiene los sobreescribe, devuelve el obj resultado
     customers: ['ZTM','NASA'],
@@ -32,7 +35,16 @@ function addNewLaunch(launch) {
   })); // Aca seteo lo que yo necesito internamente, los datos que el usuario tiene que estar desacoplado y solo pasarme lo importante
 }
 
+function abortLaunchById(launchId) {
+  const aborted = launches.get(launchId);
+  aborted.upcoming = false;
+  aborted.sucess = false;
+  return aborted;
+}
+
 module.exports = {
+  existsLaunchWithId,
   getAllLaunches,
-  addNewLaunch
+  addNewLaunch,
+  abortLaunchById
 }
