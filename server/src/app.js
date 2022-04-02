@@ -4,6 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 const planetsRouter = require('./routes/planets/planets.router');
+const launchesRouter = require('./routes/launches/launches.router')
 
 const app = express();
 
@@ -15,8 +16,10 @@ app.use(morgan('combined'));  //Lo pongo aca pq va despues del filtro de quien p
 app.use(express.json());
 app.use(express.static(path.join(__dirname,'..','public')));
 
-app.use(planetsRouter);
-app.get('/', (req, res) => {
+app.use('planets', planetsRouter);
+app.use('/launches', launchesRouter);
+// Si no pasa por ninguna de las rutas de arriba la mando al front que esta en index.html
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname,'..','public','index.html'));  // para produccion, cuando el frontend tambien es brindado por la API (en full stack)
 })
 
