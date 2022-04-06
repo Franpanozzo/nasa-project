@@ -36,7 +36,10 @@ function loadPlanetsData () {
 }
 
 async function getAllPlanets() {
-  return await planets.find({});  //El objeto dentro con los campos para filtrar
+  return await planets.find({}, {   //El objeto dentro con los campos para filtrar - segundo parametro para decir que campos muestro o saco
+    '__v': 0,
+    '_id': 0   // 0 no muestra - 1 lo muestra
+  }); 
 }
 
 async function savePlanet(planet) {
@@ -53,8 +56,15 @@ async function savePlanet(planet) {
   }
 }
 
+async function getPlanet(planetName) {
+  return await planets.findOne({
+    keplerName: planetName
+  })
+}
+
 
   module.exports = {
     loadPlanetsData,
-    getAllPlanets
+    getAllPlanets,
+    getPlanet
   }
