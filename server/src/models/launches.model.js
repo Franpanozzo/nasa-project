@@ -1,9 +1,9 @@
 const launchesDatabase = require('./launches.mongo');
 const { getPlanet } = require('./planets.model');
 
-const launches = new Map();
+const DEFAULT_FLIGHT_NUMBER = 100
 
-let latestFlightNumber = 100;
+const launches = new Map();
 
 const launch = {
   flightNumber: 100,
@@ -18,8 +18,10 @@ const launch = {
 
 saveLaunch(launch);
 
-function existsLaunchWithId(launchId) {
-  return launches.has(launchId);
+async function existsLaunchWithId(launchId) {
+  return await launchesDatabase.findOne({
+    flightNumber: launchId
+  });
 }
 
 async function getAllLaunches() {
@@ -29,6 +31,16 @@ async function getAllLaunches() {
   });
 }
 
+async function getLatestFlightNumber() {
+  const latestLaunch = await launchesDatabase
+    .findOne()
+    .sort('-flightNumber');  // Al reves que lo normal - El menos hace que sea descendente
+
+  if(!latestLaunch) return DEFAULT_FLIGHT_NUMBER;
+
+  return latestLaunch.flightNumber;
+}
+
 async function saveLaunch(launch) {
   const planet = await getPlanet(launch.target);
 
@@ -36,33 +48,40 @@ async function saveLaunch(launch) {
     throw new Error('Not matching planet was found on the target');
   }
 
-  await launchesDatabase.updateOne({
+  await launchesDatabase.findOneAndUpdate({  // A distinto de updateOne este mensaje no guarda en lo que le pasas para crear (no lo muta) lo que guarda directamente en mongo
     flightNumber: launch.flightNumber
   }, launch, {
-    upsert: true
+    upsert: true    // insert + update - la idea es si no existe que lo crea, si existe que actualize noma
   })
 }
 
-function addNewLaunch(launch) {
-  latestFlightNumber++;
-  launches.set(latestFlightNumber, Object.assign(launch, { 
-    flightNumber: latestFlightNumber,  // .assing() le METE las propiedad del obj. pasado como segundo param. al primero, y si las tiene los sobreescribe, devuelve el obj resultado
-    customers: ['ZTM','NASA'],
+async function scheduleNewLaunch(launch) {
+  const newFlightNumber = await getLatestFlightNumber() + 1;
+
+  const newLaunch = Object.assign(launch, {   // El new launch para que sea mas declarativo, pero al launch ya lo muta
+    success: true,
     upcoming: true,
-    sucess: true
-  })); // Aca seteo lo que yo necesito internamente, los datos que el usuario tiene que estar desacoplado y solo pasarme lo importante
+    customers: ['ZTM','NASA'],
+    flightNumber: newFlightNumber
+  });
+
+  await saveLaunch(newLaunch);
 }
 
-function abortLaunchById(launchId) {
-  const aborted = launches.get(launchId);
-  aborted.upcoming = false;
-  aborted.sucess = false;
-  return aborted;
+async function abortLaunchById(launchId) {
+  const aborted =  await launchesDatabase.updateOne({   
+    flightNumber: launchId
+  }, {
+    upcoming: false,
+    success: false
+  });
+
+  return aborted.acknowledged === true && aborted.modifiedCount === 1;
 }
 
 module.exports = {
   existsLaunchWithId,
   getAllLaunches,
-  addNewLaunch,
+  scheduleNewLaunch,
   abortLaunchById
 }
