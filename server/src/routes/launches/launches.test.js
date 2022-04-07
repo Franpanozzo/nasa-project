@@ -1,11 +1,18 @@
 const request = require('supertest');
 const app = require('../../app');
-const { mongoConnect } = require('../../services/mongo');
+const {
+  mongoConnect,
+  mongoDisconnect
+} = require('../../services/mongo');
 
 describe('Launches API', () => {
   beforeAll(async () => {
     await mongoConnect();
-  })
+  });
+
+  afterAll(async () => {
+    await mongoDisconnect();
+  });
 
   describe('Test GET /launches', () => {
     test('It should respond with 200 success', async () => {
@@ -20,20 +27,20 @@ describe('Launches API', () => {
     const completeLaunchData = {
       mission: 'USS Enterprise',
       rocket: 'NCC 1701-D',
-      target: 'Kepler-186 f',
+      target: 'Kepler-62 f',
       launchDate: 'January 4, 2028'
     };
   
     const launchDataWithoutDate = {
       mission: 'USS Enterprise',
       rocket: 'NCC 1701-D',
-      target: 'Kepler-186 f',
+      target: 'Kepler-62 f',
     };
   
     const launchDataWithInvalidDate = {
       mission: 'USS Enterprise',
       rocket: 'NCC 1701-D',
-      target: 'Kepler-186 f',
+      target: 'Kepler-62 f',
       launchDate: 'zoot'
     };
   
@@ -44,11 +51,11 @@ describe('Launches API', () => {
         .expect('Content-Type', /json/)
         .expect(201);
   
-      const requestDate = new Date(completeLaunchData.launchDate).valueOf();
+      const requestDate = new Date(completeLaunchData.launchDate).valueOf();  
       const responseDate = new Date(response.body.launchDate).valueOf();
-      expect(responseDate).toBe(requestDate);
+      expect(responseDate).toBe(requestDate);  // testeamos si se parseo bien la fecha en el modelo - asi se hace con fechas
   
-      expect(response.body).toMatchObject(launchDataWithoutDate);
+      expect(response.body).toMatchObject(launchDataWithoutDate);  //matcheas un subset ya que la fecha se testea arriba
     })
   
     test('It should catch missing require properties', async () => {
