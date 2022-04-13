@@ -13,3 +13,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
+      - run: npm install    # Para correr nuestros propios comandos va run
+      - run: npm run build --prefix client
+      
