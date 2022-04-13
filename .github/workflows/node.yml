@@ -1,0 +1,15 @@
+name: NASA Project CI
+on: 
+  push:
+    branches: [ main ]
+  pull_request: 
+    branches: [ main ]
+jobs:
+  build: 
+    runs-on: ubuntu-latest # especificamos todos los OS donde quiero que se corra
+    steps:
+      - uses: actions/checkout@v2  # Actions predefinidas que se pueden reutilizar, open source shi :)
+      - name: Use Node.js Version 16 # Para que se vea lo que se esta haciendo en el workflow con un nombre
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
