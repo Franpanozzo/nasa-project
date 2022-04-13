@@ -6,13 +6,18 @@ on:
     branches: [ main ]
 jobs:
   build: 
+    env: 
+      CI: true  # Para que creat react app sepa que estamos en CI y no corra watch mode
+    strategy:
+      matrix: 
+        node-version: [14.x, 16.x]  #Crea dos build jobs que corren en paralelo con cada una de las opciones
     runs-on: ubuntu-latest # especificamos todos los OS donde quiero que se corra
     steps:
       - uses: actions/checkout@v2  # Actions predefinidas que se pueden reutilizar, open source shi :)
-      - name: Use Node.js Version 16 # Para que se vea lo que se esta haciendo en el workflow con un nombre
+      - name: Use Node.js Version ${{ matrix.node-version }} # Para que se vea lo que se esta haciendo en el workflow con un nombre
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-      - run: npm install    # Para correr nuestros propios comandos va run
+          node-version: ${{ matrix.node-version }}
+      - run: npm install   # Para correr nuestros propios comandos va run
       - run: npm run build --prefix client
-      
+      - run: npm test
