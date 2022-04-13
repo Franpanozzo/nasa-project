@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix: # crece exponencialmente cuantos jobs se hacen
         node-version: [14.x, 16.x]  #Crea dos build jobs que corren en paralelo con cada una de las opciones
-        mongodb-version: ['4,4'] 
+        mongodb-version: ['4.4'] 
     runs-on: ubuntu-latest  # especificamos todos los SO donde quiero que se corra
     steps:
       - uses: actions/checkout@v2  # Actions predefinidas que se pueden reutilizar, open source shi :)
