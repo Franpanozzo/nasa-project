@@ -1,0 +1,7 @@
+.git
+
+#Excluye todos los node_modules que existen en cualquier carpeta de nuestro proyecto 
+#para que se instalen fresh en cualquiera que sea el SO que este corriendo el contenedor
+*/node_modules
+
+server/public
