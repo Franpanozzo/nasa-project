@@ -7,7 +7,7 @@ See the history of mission launches including SpaceX launches starting from the 
 
 <br />
 <div>
- <b>Technologies and tools used in ths project: </b> 
+ <b>Technologies and tools used in this project: </b> 
  <br />
  <br />
 <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E" />
