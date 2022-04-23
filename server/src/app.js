@@ -8,7 +8,7 @@ const api = require('./routes/api');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: 'http://localhost:3000' // Alfinal se provee el front desde el back asi que no hace falta
 }));
 app.use(morgan('combined'));  //Lo pongo aca pq va despues del filtro de quien puede y antes de la logica etc.
 
