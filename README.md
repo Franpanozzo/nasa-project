@@ -2,7 +2,7 @@
 
 - This is not an official project and is not affiliated with NASA or SpaceX in any way. For educational purposes only, created while doing this [Complete NodeJS Developer course](https://www.udemy.com/course/complete-nodejs-developer-zero-to-mastery/) dictated by [ZTM](https://zerotomastery.io/). 
 
-Web aplication where you can schedule a mission launch for interstellar travel to one of the Kepler Exoplanets.
+Web application where you can schedule a mission launch for interstellar travel to one of the Kepler Exoplanets.
 See the history of mission launches including SpaceX launches starting from the year 2006 (consuming SpaceX API REST), also you can see the upcoming mission launches, including the ones that you schedule.
 
 <br />
